@@ -32,17 +32,17 @@ int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
-  int nx = 1 << 15;
-  int ny = 1 << 15;
-  int nz = 1 << 15;
+  int nx = 1 << 6;
+  int ny = 1 << 6;
+  int nz = 1 << 6;
 
   int nxyz = nx * ny * nz;
   int nBytes = nxyz * sizeof(float);
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 512;
-  int dimy = 512;
+  int dimx = 32;
+  int dimy = 32;
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
