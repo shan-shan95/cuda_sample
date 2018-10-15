@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
 
   iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
-  cudaDeviseSynchronize();
+  cudaDeviceSynchronize();
   iElaps = cpuSecond() - iStart;
   printf("sumMatrixOnGPU2D <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
   grid.x, grid.y, block.x, block.y, iElaps);
