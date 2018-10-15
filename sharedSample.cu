@@ -1,5 +1,6 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
+#include <sys/time.h>
 
 __constant__ int cut_con[81] = {
   5,2,1,1,1,1,1,2,5,
@@ -12,6 +13,12 @@ __constant__ int cut_con[81] = {
   2,1,0,0,0,0,0,1,2,
   5,2,1,1,1,1,1,2,5
 };
+
+double cpuSecond() {
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  return ((double)tp.tv_sec + (double)tp.tv_usec * 1.e-6);
+}
 
 __global__ void culCellConstant(int nx, int ny, int nz) {
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
