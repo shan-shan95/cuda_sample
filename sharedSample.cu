@@ -46,10 +46,10 @@ int main(int argc, char **argv) {
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
-  iStart = cpuSecond();
+  double iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
-  iElaps = cpuSecond() - iStart;
+  double iElaps = cpuSecond() - iStart;
   printf("sumMatrixOnGPU2D <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
   grid.x, grid.y, block.x, block.y, iElaps);
   //カーネルエラーをチェック
