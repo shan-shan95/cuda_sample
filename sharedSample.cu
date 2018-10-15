@@ -33,12 +33,6 @@ int main(int argc, char **argv) {
   int nBytes = nxyz * sizeof(float);
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
-  //デバイスのコンスタントメモリを確保
-  cudaMalloc((void **)&d_cut_con, 81 * sizeof(int));
-
-  //ホストからデバイスへデータを転送
-  cudaMemcpy(d_cut_con, cut_con, 81 * sizeof(int), cudaMemcpyHostToDevise);
-
   //ホスト側でカーネルを呼び出す
   int dimx = 512;
   int dimy = 512;
@@ -55,7 +49,7 @@ int main(int argc, char **argv) {
   cudaGetLastError();
 
   //デバイスのグローバルメモリを解放
-  cudaFree(d_cut_con);
+  cudaFree(cut_con);
 
   //デバイスをリセット
   cudaDeviceReset();
