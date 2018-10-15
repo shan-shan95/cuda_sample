@@ -14,6 +14,18 @@ __constant__ int cut_con[81] = {
   5,2,1,1,1,1,1,2,5
 };
 
+__shared__ int cut_sha[81] = {
+  5,2,1,1,1,1,1,2,5,
+  2,1,0,0,0,0,0,1,2,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  2,1,0,0,0,0,0,1,2,
+  5,2,1,1,1,1,1,2,5
+};
+
 double cpuSecond() {
   struct timeval tp;
   gettimeofday(&tp, NULL);
@@ -24,6 +36,14 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
       int cut_num = cut_con[x];
+    }
+  }
+}
+
+__global__ void culCellShared(int nx, int ny, int nz) {
+  if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
+    for (int x = 0; x < 81; x++) {
+      int cut_num = cut_sha[x];
     }
   }
 }
@@ -45,12 +65,22 @@ int main(int argc, char **argv) {
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
+  //コンスタントメモリ使用
   double iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
   double iElaps = cpuSecond() - iStart;
-  printf("sumMatrixOnGPU2D <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
+  printf("culCellConstant <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
   grid.x, grid.y, block.x, block.y, iElaps);
+
+  //シェアドメモリ使用
+  double iStart = cpuSecond();
+  culCellShared<<< grid, block >>>(nx, ny, nz);
+  cudaDeviceSynchronize();
+  double iElaps = cpuSecond() - iStart;
+  printf("culCellShared <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
+  grid.x, grid.y, block.x, block.y, iElaps);
+
   //カーネルエラーをチェック
   cudaGetLastError();
 
