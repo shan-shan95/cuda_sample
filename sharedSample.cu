@@ -32,9 +32,9 @@ int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
-  int nx = 1 << 10;
-  int ny = 1 << 10;
-  int nz = 1 << 10;
+  int nx = 1 << 15;
+  int ny = 1 << 15;
+  int nz = 1 << 15;
 
   int nxyz = nx * ny * nz;
   int nBytes = nxyz * sizeof(float);
