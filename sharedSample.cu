@@ -14,18 +14,6 @@ __constant__ int cut_con[81] = {
   5,2,1,1,1,1,1,2,5
 };
 
-__shared__ int cut_sha[81] = {
-  5,2,1,1,1,1,1,2,5,
-  2,1,0,0,0,0,0,1,2,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  2,1,0,0,0,0,0,1,2,
-  5,2,1,1,1,1,1,2,5
-};
-
 double cpuSecond() {
   struct timeval tp;
   gettimeofday(&tp, NULL);
@@ -41,6 +29,18 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
 }
 
 __global__ void culCellShared(int nx, int ny, int nz) {
+  __shared__ int cut_sha[81] = {
+    5,2,1,1,1,1,1,2,5,
+    2,1,0,0,0,0,0,1,2,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    2,1,0,0,0,0,0,1,2,
+    5,2,1,1,1,1,1,2,5
+  };
+
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
       int cut_num = cut_sha[x];
