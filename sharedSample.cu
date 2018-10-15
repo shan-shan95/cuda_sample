@@ -32,12 +32,11 @@ int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
-  int nx = 1 << 6;
-  int ny = 1 << 6;
-  int nz = 1 << 6;
+  int nx = 1 << 10;
+  int ny = 1 << 10;
+  int nz = 1 << 10;
 
   int nxyz = nx * ny * nz;
-  int nBytes = nxyz * sizeof(float);
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
