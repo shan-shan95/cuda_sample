@@ -1,15 +1,6 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-#define CHECK(call) {
-  const cudaError_t error = call;
-  if (error != cudaSuccess) {
-    printf("Error: %s:%d, ", __FILE__, __LINE__);
-    printf("code: %d, reason: %s\n", error, cudaGetErrorString(error));
-    exit(1);
-  }
-}
-
 __constant__ int cut_con[81] = {
   5,2,1,1,1,1,1,2,5,
   2,1,0,0,0,0,0,1,2,
@@ -21,8 +12,6 @@ __constant__ int cut_con[81] = {
   2,1,0,0,0,0,0,1,2,
   5,2,1,1,1,1,1,2,5
 };
-
-__shared__ float *cut_sha;
 
 __global__ void culCellConstant(int nx, int ny, int nz) {
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
@@ -45,10 +34,10 @@ int main(int argc, char **argv) {
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //デバイスのコンスタントメモリを確保
-  CHECK(cudaMalloc((void **)&d_cut_con, 81 * sizeof(int)));
+  cudaMalloc((void **)&d_cut_con, 81 * sizeof(int));
 
   //ホストからデバイスへデータを転送
-  CHECK(cudaMemcpy(d_cut_con, cut_con, 81 * sizeof(int), cudaMemcpyHostToDevise));
+  cudaMemcpy(d_cut_con, cut_con, 81 * sizeof(int), cudaMemcpyHostToDevise);
 
   //ホスト側でカーネルを呼び出す
   int dimx = 512;
@@ -58,18 +47,18 @@ int main(int argc, char **argv) {
 
   iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
-  CHECK(cudaDeviseSynchronize());
+  cudaDeviseSynchronize();
   iElaps = cpuSecond() - iStart;
   printf("sumMatrixOnGPU2D <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
-          grid.x, grid.y, block.x, block.y, iElaps);
+  grid.x, grid.y, block.x, block.y, iElaps);
   //カーネルエラーをチェック
-  CHECK(cudaGetLastError());
+  cudaGetLastError();
 
   //デバイスのグローバルメモリを解放
-  CHECK(cudaFree(d_cut_con));
+  cudaFree(d_cut_con);
 
   //デバイスをリセット
-  CHECK(cudaDeviceReset());
+  cudaDeviceReset();
 
   return(0);
 }
