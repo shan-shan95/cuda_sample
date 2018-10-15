@@ -1,8 +1,7 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-#define CHECK(call)
-{
+#define CHECK(call) {
   const cudaError_t error = call;
   if (error != cudaSuccess)
   {
@@ -14,7 +13,19 @@
 
 __constant__ float cut[262144] = {1};
 
-__shared__ float cut2[262144] = {1};
+__shared__ float cut2[262144];
+
+void initialData(float *ip, int size) {
+  //乱数シードを生成
+  time_t t;
+  srand((unsigned) time(&t));
+
+  for (int i = 0; i < size; i++) {
+    ip[i] = (float)(rand() & 0xFF) / 10.0f;
+  }
+
+  return;
+}
 
 void sumMatrixOnHost(float *A, float *B, float *C, const int nx, const int ny) {
   float *ia = A;
@@ -34,8 +45,8 @@ void sumMatrixOnHost(float *A, float *B, float *C, const int nx, const int ny) {
 }
 
 __global__ void sumMatrixOnGPU2D(float *MatA, float *MatB, float *MatC, int nx, int ny) {
-  unsigned int ix = threadIdx.x + blockIdx.x * BlockDim.x;
-  unsigned int iy = threadIdx.y + blockIdx.y * BlockDim.y;
+  unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
+  unsigned int iy = threadIdx.y + blockIdx.y * blockDim.y;
   unsigned int idx = iy * nx + ix;
 
   if (ix < nx && iy < ny)
@@ -43,8 +54,8 @@ __global__ void sumMatrixOnGPU2D(float *MatA, float *MatB, float *MatC, int nx, 
 }
 
 __global__ void sumMatrixOnGPU2Dshared(float *MatA, float *MatB, float *MatC, int nx, int ny) {
-  unsigned int ix = threadIdx.x + blockIdx.x * BlockDim.x;
-  unsigned int iy = threadIdx.y + blockIdx.y * BlockDim.y;
+  unsigned int ix = threadIdx.x + blockIdx.x * blockDim.x;
+  unsigned int iy = threadIdx.y + blockIdx.y * blockDim.y;
   unsigned int idx = iy * nx + ix;
 
   if (ix < nx && iy < ny)
@@ -53,13 +64,6 @@ __global__ void sumMatrixOnGPU2Dshared(float *MatA, float *MatB, float *MatC, in
 
 int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
-
-  //デバイスのセットアップ
-  int dev = 0;
-  cudaDeviseProp deviseProp;
-  CHECK(cudaGetDeviceProperties(&deviceProp, dev));
-  printf("Using Devise %d: %s\n", dev, deviseProp.name);
-  CHECK(cudaSetDevice(dev));
 
   //行列のデータサイズを指定
   int nx = 1 << 9;
