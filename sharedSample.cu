@@ -74,12 +74,12 @@ int main(int argc, char **argv) {
   grid.x, grid.y, block.x, block.y, iElaps);
 
   //シェアドメモリ使用
-  double iStart = cpuSecond();
+  double iStart2 = cpuSecond();
   culCellShared<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
-  double iElaps = cpuSecond() - iStart;
+  double iElaps2 = cpuSecond() - iStart2;
   printf("culCellShared <<<(%d, %d), (%d, %d)>>> elapsed %f sec\n",
-  grid.x, grid.y, block.x, block.y, iElaps);
+  grid.x, grid.y, block.x, block.y, iElaps2);
 
   //カーネルエラーをチェック
   cudaGetLastError();
