@@ -1,7 +1,7 @@
 #include <cuda_runtime.h>
 #include <stdio.h>
 
-#define CHECK(cudaError_t call) {
+#define CHECK(call) {
   const cudaError_t error = call;
   if (error != cudaSuccess) {
     printf("Error: %s:%d, ", __FILE__, __LINE__);
