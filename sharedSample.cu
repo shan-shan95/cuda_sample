@@ -2,21 +2,21 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-__constant__ int cut_con[81] = {
-  5,2,1,1,1,1,1,2,5,
-  2,1,0,0,0,0,0,1,2,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  2,1,0,0,0,0,0,1,2,
-  5,2,1,1,1,1,1,2,5
-};
-
 __shared__ float cut_sha[81];
 
 __global__ void culCellConstant(int nx, int ny, int nz) {
+  __constant__ int cut_con[81] = {
+    5,2,1,1,1,1,1,2,5,
+    2,1,0,0,0,0,0,1,2,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    2,1,0,0,0,0,0,1,2,
+    5,2,1,1,1,1,1,2,5
+  };
+
   int cut_num;
 
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
@@ -29,6 +29,7 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
 __global__ void culCellShared(int nx, int ny, int nz) {
   int cut_num;
 
+  //実行時間155usほど
   cut_sha[0] = 5;
   cut_sha[1] = 2;
   cut_sha[2] = 1;
