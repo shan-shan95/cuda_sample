@@ -31,12 +31,9 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
 }
 
 __global__ void culCellShared(int nx, int ny, int nz) {
-  for (int i = 0; i < 81; i++) {
-    cut_sha[i] = (float)cut_con[i];
-  }
-
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
+      cut_sha[x] = (float)cut_con[x];
       int cut_num = cut_sha[x];
     }
   }
