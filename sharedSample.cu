@@ -16,7 +16,7 @@ __constant__ int cut_con[81] = {
 
 __shared__ float cut_sha[81];
 
-__global__ void culCellResista(int nx, int ny, int nz) {
+__global__ void culCellResister(int nx, int ny, int nz) {
   int cut_res[81] = {
     5,2,1,1,1,1,1,2,5,
     2,1,0,0,0,0,0,1,2,
@@ -265,7 +265,7 @@ int main(int argc, char **argv) {
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
   //コンスタントメモリ使用
-  culCellConstant<<< grid, block >>>(nx, ny, nz);
+  culCellResister<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
 
   //シェアドメモリ使用
