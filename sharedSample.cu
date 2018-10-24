@@ -14,18 +14,7 @@ __constant__ int cut_con[81] = {
   5,2,1,1,1,1,1,2,5
 };
 
-__shared__ float cut_sha[81] = {
-  5,2,1,1,1,1,1,2,5,
-  2,1,0,0,0,0,0,1,2,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  2,1,0,0,0,0,0,1,2,
-  5,2,1,1,1,1,1,2,5
-};
-
+__shared__ float cut_sha[81];
 
 double cpuSecond() {
   struct timeval tp;
@@ -43,7 +32,7 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
 
 __global__ void culCellShared(int nx, int ny, int nz) {
   for (int i = 0; i < 81; i++) {
-    cut_sha[i] = cut_con[i];
+    cut_sha[i] = (float)cut_con[i];
   }
 
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
