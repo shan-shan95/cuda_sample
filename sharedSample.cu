@@ -2,30 +2,30 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-__constant__ int cut_con[81] = {
-  5,2,1,1,1,1,1,2,5,
-  2,1,0,0,0,0,0,1,2,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  2,1,0,0,0,0,0,1,2,
-  5,2,1,1,1,1,1,2,5
-};
+// __constant__ int cut_con[81] = {
+//   5,2,1,1,1,1,1,2,5,
+//   2,1,0,0,0,0,0,1,2,
+//   1,0,0,0,0,0,0,0,1,
+//   1,0,0,0,0,0,0,0,1,
+//   1,0,0,0,0,0,0,0,1,
+//   1,0,0,0,0,0,0,0,1,
+//   1,0,0,0,0,0,0,0,1,
+//   2,1,0,0,0,0,0,1,2,
+//   5,2,1,1,1,1,1,2,5
+// };
 
-__shared__ float cut_sha[81];
+// __shared__ float cut_sha[81];
 
-__global__ void culCellConstant(int nx, int ny, int nz) {
-
-  int cut_num;
-
-  if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
-    for (int x = 0; x < 81; x++) {
-      cut_num = cut_con[x];
-    }
-  }
-}
+// __global__ void culCellConstant(int nx, int ny, int nz) {
+//
+//   int cut_num;
+//
+//   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
+//     for (int x = 0; x < 81; x++) {
+//       cut_num = cut_con[x];
+//     }
+//   }
+// }
 
 __global__ void culCellShared(int nx, int ny, int nz) {
   int cut_num;
@@ -266,9 +266,9 @@ int main(int argc, char **argv) {
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
-  //コンスタントメモリ使用
-  culCellConstant<<< grid, block >>>(nx, ny, nz);
-  cudaDeviceSynchronize();
+  // //コンスタントメモリ使用
+  // culCellConstant<<< grid, block >>>(nx, ny, nz);
+  // cudaDeviceSynchronize();
 
   //シェアドメモリ使用
   culCellShared<<< grid, block >>>(nx, ny, nz);
@@ -277,8 +277,8 @@ int main(int argc, char **argv) {
   //カーネルエラーをチェック
   cudaGetLastError();
 
-  //デバイスのグローバルメモリを解放
-  cudaFree(cut_con);
+  // //デバイスのグローバルメモリを解放
+  // cudaFree(cut_con);
 
   //デバイスをリセット
   cudaDeviceReset();
