@@ -38,7 +38,7 @@ __global__ void culCellShared(int nx, int ny, int nz) {
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
       cut_sha[x] = (float)cut_con[x];
-      cut_num = (int)cut_sha[x];
+      cut_num = cut_sha[x];
       cut_num = cut_con[x];
     }
   }
@@ -56,8 +56,8 @@ int main(int argc, char **argv) {
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 64;
-  int dimy = 64;
+  int dimx = 32;
+  int dimy = 32;
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
