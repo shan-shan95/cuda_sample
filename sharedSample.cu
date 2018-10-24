@@ -23,19 +23,23 @@ double cpuSecond() {
 }
 
 __global__ void culCellConstant(int nx, int ny, int nz) {
+  int cut_num;
+
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
-      int cut_num = cut_con[x];
+      cut_num = cut_con[x];
     }
   }
 }
 
 __global__ void culCellShared(int nx, int ny, int nz) {
+  int cut_num;
+
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
       cut_sha[x] = (float)cut_con[x];
-      int cut_num = cut_sha[x];
-      int cut_num = cut_con[x];
+      cut_num = cut_sha[x];
+      cut_num = cut_con[x];
     }
   }
 }
