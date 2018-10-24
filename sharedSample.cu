@@ -2,21 +2,11 @@
 #include <stdio.h>
 #include <sys/time.h>
 
-__constant__ int cut_con[81] = {
-  5,2,1,1,1,1,1,2,5,
-  2,1,0,0,0,0,0,1,2,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  1,0,0,0,0,0,0,0,1,
-  2,1,0,0,0,0,0,1,2,
-  5,2,1,1,1,1,1,2,5
-};
-
 __shared__ float cut_sha[81];
 
 __global__ void culCellResister(int nx, int ny, int nz) {
+
+  //実行時間155usほどつまりシェアドメモリそのままと変わらない
   int cut_res[81] = {
     5,2,1,1,1,1,1,2,5,
     2,1,0,0,0,0,0,1,2,
@@ -274,9 +264,6 @@ int main(int argc, char **argv) {
 
   //カーネルエラーをチェック
   cudaGetLastError();
-
-  //デバイスのグローバルメモリを解放
-  cudaFree(cut_con);
 
   //デバイスをリセット
   cudaDeviceReset();
