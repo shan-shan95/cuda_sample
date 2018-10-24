@@ -2,10 +2,22 @@
 #include <stdio.h>
 #include <sys/time.h>
 
+__constant__ int cut_con[81] = {
+  5,2,1,1,1,1,1,2,5,
+  2,1,0,0,0,0,0,1,2,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  1,0,0,0,0,0,0,0,1,
+  2,1,0,0,0,0,0,1,2,
+  5,2,1,1,1,1,1,2,5
+};
+
 __shared__ float cut_sha[81];
 
-__global__ void culCellConstant(int nx, int ny, int nz) {
-  __constant__ int cut_con[81] = {
+__global__ void culCellResista(int nx, int ny, int nz) {
+  int cut_res[81] = {
     5,2,1,1,1,1,1,2,5,
     2,1,0,0,0,0,0,1,2,
     1,0,0,0,0,0,0,0,1,
@@ -21,7 +33,7 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
 
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
-      cut_num = cut_con[x];
+      cut_num = cut_res[x];
     }
   }
 }
