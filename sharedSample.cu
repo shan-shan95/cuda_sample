@@ -56,8 +56,8 @@ int main(int argc, char **argv) {
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 128;
-  int dimy = 16;
+  int dimx = 64;
+  int dimy = 64;
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
