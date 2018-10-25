@@ -1,6 +1,10 @@
 # CUDAの練習用プログラム
 ## sharedSample
-シェアドメモリ使用時の効率
+シェアドメモリを使用して配列の読み込み
+## constantSample
+コンスタントメモリを使用して配列の読み込み
+## registerSample
+レジスタを使用して配列の読み込み
 ## simpleDivergence
 ブロックごとの効率の良い実行例
 ## sumMatrixOnGPU-1D-grid-1D-block
