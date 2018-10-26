@@ -25,6 +25,12 @@ __global__ void culCellResister(int nx, int ny, int nz) {
   }
 }
 
+double cpuSecond() {
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  return ((double)tp.tv_sec + (double)tp.tv_usec * 1.e-6);
+}
+
 int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
@@ -43,12 +49,14 @@ int main(int argc, char **argv) {
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
   //レジスタ使用
+  double iStart = cpuSecond();
   culCellResister<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
+  double iElaps = cpuSecond() - iStart;
 
   //カーネルエラーをチェック
   cudaGetLastError();
-  
+
   //デバイスをリセット
   cudaDeviceReset();
 

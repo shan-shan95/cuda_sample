@@ -25,6 +25,12 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
   }
 }
 
+double cpuSecond() {
+  struct timeval tp;
+  gettimeofday(&tp, NULL);
+  return ((double)tp.tv_sec + (double)tp.tv_usec * 1.e-6);
+}
+
 int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
@@ -42,13 +48,11 @@ int main(int argc, char **argv) {
   dim3 block(dimx, dimy);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
 
-  // //コンスタントメモリ使用
-  // culCellConstant<<< grid, block >>>(nx, ny, nz);
-  // cudaDeviceSynchronize();
-
-  //シェアドメモリ使用
+  //コンスタントメモリ使用
+  double iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
+  double iElaps = cpuSecond() - iStart;
 
   //カーネルエラーをチェック
   cudaGetLastError();
