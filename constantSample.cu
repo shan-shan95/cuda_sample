@@ -17,6 +17,7 @@ __constant__ int cut_con[81] = {
 __global__ void culCellConstant(int nx, int ny, int nz) {
 
   int cut_num;
+  printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
@@ -50,7 +51,7 @@ int main(int argc, char **argv) {
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
   int dimy = 32;
-  int dimz = 32;
+  int dimz = 1;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
 
