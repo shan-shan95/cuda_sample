@@ -41,16 +41,16 @@ int main(int argc, char **argv) {
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
-  int nx = 1 << 7;
-  int ny = 1 << 7;
-  int nz = 1 << 7;
+  int nx = 1 << 10;
+  int ny = 1 << 10;
+  int nz = 1 << 10;
 
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
   int dimy = 32;
-  int dimz = 1;
+  int dimz = 32;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
   printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
