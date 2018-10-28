@@ -238,7 +238,7 @@ int main(int argc, char **argv) {
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
   int dimy = 32;
-  int dimz = 32;
+  int dimz = 1;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
 
