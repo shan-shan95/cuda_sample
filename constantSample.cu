@@ -39,20 +39,21 @@ int main(int argc, char **argv) {
   int ny = 1 << 10;
   int nz = 1 << 10;
 
-  int nxyz = nx * ny * nz;
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 32;
-  int dimy = 32;
-  dim3 block(dimx, dimy);
-  dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
+  int dimx = 128;
+  int dimy = 128;
+  int dimz = 32;
+  dim3 block(dimx, dimy, dimz);
+  dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
 
   //コンスタントメモリ使用
   double iStart = cpuSecond();
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
   double iElaps = cpuSecond() - iStart;
+  printf("function execution time: %d ms", iElaps);
 
   //カーネルエラーをチェック
   cudaGetLastError();
