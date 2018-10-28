@@ -48,7 +48,7 @@ int main(int argc, char **argv) {
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 32;
+  int dimx = 64;
   int dimy = 32;
   int dimz = 1;
   dim3 block(dimx, dimy, dimz);
