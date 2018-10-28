@@ -33,6 +33,7 @@ double cpuSecond() {
 
 int main(int argc, char **argv) {
   cudaEvent_t start, stop;
+  double elapsed_time_ms;
 
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
