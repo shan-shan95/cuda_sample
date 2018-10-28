@@ -33,7 +33,7 @@ double cpuSecond() {
 
 int main(int argc, char **argv) {
   cudaEvent_t start, stop;
-  double elapsed_time_ms;
+  double *elapsed_time_ms;
 
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
@@ -58,7 +58,8 @@ int main(int argc, char **argv) {
   cudaEventRecord(start, 0);
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaEventRecord(stop, 0);
-  cudaDeviceSynchronize(stop);
+  cudaDeviceSynchronize();
+  cudaEventSynchronize(stop);
   cudaEventElapsedTime(&elapsed_time_ms, start, stop);
   printf("time: %8.2f ms \n", elapsed_time_ms);
   cudaEventDestroy(start);
