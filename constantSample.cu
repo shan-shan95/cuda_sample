@@ -32,6 +32,11 @@ double cpuSecond() {
 }
 
 int main(int argc, char **argv) {
+  cudaEvent_t start, stop;
+
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
@@ -49,11 +54,14 @@ int main(int argc, char **argv) {
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
 
   //コンスタントメモリ使用
-  double iStart = cpuSecond();
+  cudaEventRecord(start, 0);
   culCellConstant<<< grid, block >>>(nx, ny, nz);
-  cudaDeviceSynchronize();
-  double iElaps = cpuSecond() - iStart;
-  printf("function execution time: %f second\n", iElaps);
+  cudaEventRecord(stop, 0);
+  cudaDeviceSynchronize(stop);
+  cudaEventElapsedTime(&elapsed_time_ms, start, stop);
+  printf("time: %8.2f ms \n", elapsed_time_ms);
+  cudaEventDestroy(start);
+  cudaEventDestroy(stop);
 
   //カーネルエラーをチェック
   cudaGetLastError();
