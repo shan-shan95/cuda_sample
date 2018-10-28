@@ -50,7 +50,7 @@ int main(int argc, char **argv) {
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
   int dimy = 32;
-  int dimz = 32;
+  int dimz = 1;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
   printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
