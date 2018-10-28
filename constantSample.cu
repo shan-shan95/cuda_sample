@@ -42,8 +42,8 @@ int main(int argc, char **argv) {
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
-  int dimx = 128;
-  int dimy = 128;
+  int dimx = 32;
+  int dimy = 64;
   int dimz = 32;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
@@ -53,7 +53,7 @@ int main(int argc, char **argv) {
   culCellConstant<<< grid, block >>>(nx, ny, nz);
   cudaDeviceSynchronize();
   double iElaps = cpuSecond() - iStart;
-  printf("function execution time: %d ms", iElaps);
+  printf("function execution time: %d second\n", iElaps);
 
   //カーネルエラーをチェック
   cudaGetLastError();
