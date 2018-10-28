@@ -220,6 +220,12 @@ double cpuSecond() {
 }
 
 int main(int argc, char **argv) {
+  cudaEvent_t start, stop;
+  float elapsed_time_ms;
+
+  cudaEventCreate(&start);
+  cudaEventCreate(&stop);
+
   printf("%s Starting...\n", argv[0]);
 
   //行列のデータサイズを指定
@@ -227,20 +233,25 @@ int main(int argc, char **argv) {
   int ny = 1 << 10;
   int nz = 1 << 10;
 
-  int nxyz = nx * ny * nz;
   printf("Matrix size: nx %d ny %d nz %d\n", nx, ny, nz);
 
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
   int dimy = 32;
-  dim3 block(dimx, dimy);
-  dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y);
+  int dimz = 32;
+  dim3 block(dimx, dimy, dimz);
+  dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
 
   //シェアドメモリ使用
-  double iStart = cpuSecond();
+  cudaEventRecord(start, 0);
   culCellShared<<< grid, block >>>(nx, ny, nz);
+  cudaEventRecord(stop, 0);
   cudaDeviceSynchronize();
-  double iElaps = cpuSecond() - iStart;
+  cudaEventSynchronize(stop);
+  cudaEventElapsedTime(&elapsed_time_ms, start, stop);
+  printf("time: %8.2f ms \n", elapsed_time_ms);
+  cudaEventDestroy(start);
+  cudaEventDestroy(stop);
 
   //カーネルエラーをチェック
   cudaGetLastError();
