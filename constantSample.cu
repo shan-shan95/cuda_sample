@@ -21,6 +21,7 @@ __global__ void culCellConstant(int nx, int ny, int nz) {
   if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
     for (int x = 0; x < 81; x++) {
       cut_num = cut_con[x];
+      printf("OK!")
     }
   }
 }
