@@ -241,6 +241,7 @@ int main(int argc, char **argv) {
   int dimz = 1;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
+  printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
   //シェアドメモリ使用
   cudaEventRecord(start, 0);
