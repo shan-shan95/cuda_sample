@@ -90,7 +90,6 @@ __global__ void culCellShared(int nx, int ny, int nz) {
   // cut_sha[79] = 2;
   // cut_sha[80] = 5;
 
-  //
   int threadId = (threadIdx.z * blockDim.y * blockDim.x + threadIdx.y * blockDim.x + threadIdx.x) % 32;
 
   if (threadId == 0 || threadId == 24) {
@@ -144,8 +143,10 @@ int main(int argc, char **argv) {
   cudaEvent_t start, stop;
   float elapsed_time_ms;
 
+  //タイマー開始
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
+  cudaEventRecord(start, 0);
 
   printf("%s Starting...\n", argv[0]);
 
@@ -165,18 +166,21 @@ int main(int argc, char **argv) {
   printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
   //シェアドメモリ使用
-  cudaEventRecord(start, 0);
-  culCellShared<<< grid, block >>>(nx, ny, nz);
-  cudaEventRecord(stop, 0);
+  for(int i = 0 ; i < 1000 ; i++) {
+    culCellShared<<< grid, block >>>(nx, ny, nz);
+  }
   cudaDeviceSynchronize();
+
+  //カーネルエラーをチェック
+  cudaGetLastError();
+
+  //タイマーをストップ
+  cudaEventRecord(stop, 0);
   cudaEventSynchronize(stop);
   cudaEventElapsedTime(&elapsed_time_ms, start, stop);
   printf("time: %8.2f ms \n", elapsed_time_ms);
   cudaEventDestroy(start);
   cudaEventDestroy(stop);
-
-  //カーネルエラーをチェック
-  cudaGetLastError();
 
   //デバイスをリセット
   cudaDeviceReset();
