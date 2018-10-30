@@ -12,7 +12,7 @@ __global__ void culCellShared(int nx, int ny, int nz) {
 
     if (threadId < 27) {
       if (threadId == 0 || threadId == 2 || threadId == 24 || threadId == 26) {
-        unsigned int t = (threadId << 30) >> 30
+        unsigned int t = (threadId << 30) >> 30;
         cut_sha[3 * threadId + t] = 5;
         cut_sha[3 * threadId + 1] = 2;
         cut_sha[3 * threadId + 2 - t] = 1;
