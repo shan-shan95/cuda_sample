@@ -35,8 +35,10 @@ int main(int argc, char **argv) {
   cudaEvent_t start, stop;
   float elapsed_time_ms;
 
+  //タイマー開始
   cudaEventCreate(&start);
   cudaEventCreate(&stop);
+  cudaEventRecord(start, 0);
 
   printf("%s Starting...\n", argv[0]);
 
@@ -55,12 +57,14 @@ int main(int argc, char **argv) {
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
   printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
-
   //コンスタントメモリ使用
-  cudaEventRecord(start, 0);
-  culCellConstant<<< grid, block >>>(nx, ny, nz);
+  for(int i = 0; i < 1000; i++) {
+    culCellConstant<<< grid, block >>>(nx, ny, nz);
+    cudaDeviceSynchronize();
+  }
+
+  //タイマーをストップ
   cudaEventRecord(stop, 0);
-  cudaDeviceSynchronize();
   cudaEventSynchronize(stop);
   cudaEventElapsedTime(&elapsed_time_ms, start, stop);
   printf("time: %8.2f ms \n", elapsed_time_ms);
