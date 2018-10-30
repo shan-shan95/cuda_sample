@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
   printf("grid: %d, %d, %d, block: %d, %d, %d\n", grid.x, grid.y, grid.z, block.x, block.y, block.z);
 
   //シェアドメモリ使用
-  for(int i = 0 ; i < 1000 ; i++) {
+  for(int i = 0 ; i < 1 ; i++) {
     culCellShared<<< grid, block >>>(nx, ny, nz);
     cudaDeviceSynchronize();
   }
