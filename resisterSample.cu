@@ -3,10 +3,28 @@
 #include <sys/time.h>
 
 __global__ void culCellResister(int nx, int ny, int nz) {
+  int cut_num;
 
   //実行時間155usほど。つまりシェアドメモリそのままと変わらない
   //カーネル内で変数宣言すればレジスタに乗ると思っていたが、間違えていた
   //配列はキャッシュに乗らない。おそらくコンスタントメモリに乗っているので結果が同じになった？
+  int cut_res[81] = {
+    5,2,1,1,1,1,1,2,5,
+    2,1,0,0,0,0,0,1,2,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    1,0,0,0,0,0,0,0,1,
+    2,1,0,0,0,0,0,1,2,
+    5,2,1,1,1,1,1,2,5
+  };
+
+  if (threadIdx.x < nx && threadIdx.y < ny && threadIdx.z < nz) {
+    for (int x = 0; x < 81; x++) {
+      cut_num = cut_res[x];
+    }
+  }
 }
 
 double cpuSecond() {
@@ -33,7 +51,7 @@ int main(int argc, char **argv) {
 
   //ホスト側でカーネルを呼び出す
   int dimx = 32;
-  int dimy = 32;
+  int dimy = 16;
   int dimz = 1;
   dim3 block(dimx, dimy, dimz);
   dim3 grid((nx + block.x - 1) / block.x, (ny + block.y - 1) / block.y, (nz + block.z - 1) / block.z);
