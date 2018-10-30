@@ -168,11 +168,8 @@ int main(int argc, char **argv) {
   //シェアドメモリ使用
   for(int i = 0 ; i < 1000 ; i++) {
     culCellShared<<< grid, block >>>(nx, ny, nz);
+    cudaDeviceSynchronize();
   }
-  cudaDeviceSynchronize();
-
-  //カーネルエラーをチェック
-  cudaGetLastError();
 
   //タイマーをストップ
   cudaEventRecord(stop, 0);
@@ -181,6 +178,9 @@ int main(int argc, char **argv) {
   printf("time: %8.2f ms \n", elapsed_time_ms);
   cudaEventDestroy(start);
   cudaEventDestroy(stop);
+
+  //カーネルエラーをチェック
+  cudaGetLastError();
 
   //デバイスをリセット
   cudaDeviceReset();
