@@ -7,7 +7,7 @@ __shared__ float cut_sha[81];
 __global__ void culCellShared(int nx, int ny, int nz) {
   int cut_num;
 
-  //実行時間155usほど
+  //実行時間150msほど
   // cut_sha[0] = 5;
   // cut_sha[1] = 2;
   // cut_sha[2] = 1;
@@ -90,7 +90,7 @@ __global__ void culCellShared(int nx, int ny, int nz) {
   // cut_sha[79] = 2;
   // cut_sha[80] = 5;
 
-  // 実行時間200usほど
+  //
   int threadId = (threadIdx.z * blockDim.y * blockDim.x + threadIdx.y * blockDim.x + threadIdx.x) % 32;
 
   if (threadId == 0 || threadId == 24) {
