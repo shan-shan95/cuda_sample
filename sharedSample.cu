@@ -25,7 +25,7 @@ __global__ void culCellShared(int nx, int ny, int nz) {
         cut_sha[3 * threadId + t] = 2;
         cut_sha[3 * threadId + 1] = 1;
         cut_sha[3 * threadId + 2 - t] = 0;
-      } else if (threadId % 3 == 1 && threadId >= 4 && threadId <= 22) {
+      } else if (threadId % 3 == 1 ) {
         cut_sha[3 * threadId] = 0;
         cut_sha[3 * threadId + 1] = 0;
         cut_sha[3 * threadId + 2] = 0;
