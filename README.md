@@ -1,4 +1,6 @@
 # CUDAの練習用プログラム
+## grid_range
+粒子法のベルレリストを用いたメモリ最適化手法のグラフ描画（gnuplot導入要）
 ## sharedSample
 シェアドメモリを使用して配列の読み込み
 ## constantSample
