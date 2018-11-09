@@ -1,4 +1,6 @@
 # CUDAの練習用プログラム
+## 3d_grid_range
+grid_rangeの3次元版
 ## grid_range
 粒子法のベルレリストを用いたメモリ最適化手法のグラフ描画（gnuplot導入要）
 ## sharedSample
