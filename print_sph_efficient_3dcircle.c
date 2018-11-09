@@ -1,12 +1,12 @@
 #include <stdio.h>
-#define SIZE 12
+#define SIZE 13
 
 int main(void) {
-	typedef struct point {
-		int x;
-		int y;
-		int z;
-	}
+	typedef struct {
+		double x;
+		double y;
+		double z;
+	} point;
 	point p[SIZE][SIZE][SIZE];
 	int i, j, k;
 
@@ -24,7 +24,7 @@ int main(void) {
 		for (j = 0; j < SIZE; j++) {
 			for (k = 0; k < SIZE; k++) {
 				// 注目セルとの距離計算
-				printf("%f ", p[k][j][i]);
+				printf("(%2d, %2d, %2d) ", (int)p[k][j][i].x, (int)p[k][j][i].y, (int)p[k][j][i].z);
 			}
 			printf("\n");
 		}
